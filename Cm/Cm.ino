@@ -3,8 +3,11 @@
 #define TOF10120_ADDRESS 0x52 // Address of the TOF10120 sensor
 
 void setup() {
-  Wire.begin(); // Initialize I2C communication
-  Serial.begin(9600); // Initialize serial communication
+  // Initialize I2C communication for TOF10120 sensor
+  Wire.begin();
+  
+  // Initialize serial communication for debugging
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -20,17 +23,21 @@ void loop() {
   // Convert distance to centimeters
   float distance_cm = distance_raw * 0.01; // Each unit is 1 cm
   
-  // Print distance measurement
+  // Print distance measurement for debugging
   Serial.print("Distance: ");
   Serial.print(distance_cm);
   Serial.println(" cm");
   
-  // Check if an object is within 200 cm
-  if (distance_cm <= 200) {
-    Serial.println("Object detected within 200 cm");
-  } else {
-    Serial.println("No object within 200 cm");
-  }
+  // Transmit distance measurement over Bluetooth
+  transmitOverBluetooth(distance_cm);
   
   delay(1000); // Delay before next measurement
+}
+
+void transmitOverBluetooth(float distance_cm) {
+  // Convert float distance to string
+  String distanceString = String(distance_cm);
+  
+  // Send distance data over serial to Bluetooth module
+  Serial.println(distanceString);
 }
